@@ -1,5 +1,6 @@
+import os
+from dotenv import load_dotenv
 from langchain_core.messages import SystemMessage
-from langchain_openai import ChatOpenAI
 
 from langgraph.graph import START, StateGraph, MessagesState
 from langgraph.prebuilt import tools_condition, ToolNode
@@ -33,9 +34,24 @@ def divide(a: int, b: int) -> float:
 
 tools = [add, multiply, divide]
 
+# Load environment variables from .env
+load_dotenv()
+
+from langchain_openai import ChatOpenAI, AzureChatOpenAI
+
+def get_llm_with_tools(tools):
+    model = AzureChatOpenAI(
+        azure_deployment="gpt-4.1",  # or your deployment
+        api_version="2024-12-01-preview",
+        model = "gpt-4.1",
+        temperature=0,
+        max_tokens=None,
+        timeout=None,
+        max_retries=2)
+    return model.bind_tools(tools)
+
 # Define LLM with bound tools
-llm = ChatOpenAI(model="gpt-4o")
-llm_with_tools = llm.bind_tools(tools)
+llm_with_tools = get_llm_with_tools(tools)
 
 # System message
 sys_msg = SystemMessage(content="You are a helpful assistant tasked with writing performing arithmetic on a set of inputs.")

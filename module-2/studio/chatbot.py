@@ -2,9 +2,20 @@ from langchain_core.messages import HumanMessage, SystemMessage, RemoveMessage
 from langgraph.graph import MessagesState
 from langgraph.graph import StateGraph, START, END
 
+from dotenv import load_dotenv
+load_dotenv()
+
 # We will use this model for both the conversation and the summarization
-from langchain_openai import ChatOpenAI
-model = ChatOpenAI(model="gpt-4o", temperature=0) 
+from langchain_openai import ChatOpenAI, AzureChatOpenAI
+#model = ChatOpenAI(model="gpt-4o", temperature=0) 
+model = AzureChatOpenAI(
+        azure_deployment="gpt-4.1",  # or your deployment
+        api_version="2024-12-01-preview",
+        model = "gpt-4.1",
+        temperature=0,
+        max_tokens=None,
+        timeout=None,
+        max_retries=2)
 
 # State class to store messages and summary
 class State(MessagesState):

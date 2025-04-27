@@ -1,7 +1,12 @@
+import os
+from dotenv import load_dotenv
 import random 
 from typing import Literal
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
+
+# Load environment variables from .env
+load_dotenv()
 
 # State
 class State(TypedDict):
